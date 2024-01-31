@@ -21,32 +21,13 @@ RUN \
     set -ev && \
     apt-get update && \
     apt-get upgrade -qy && \
-    apt-get install -qy --no-install-recommends\
-    apt-transport-https \
-    ca-certificates
-
-# Add PHP repo
-COPY apt/deb.sury.org-php.gpg /usr/share/keyrings/deb.sury.org-php.gpg
-COPY apt/php.list /etc/apt/sources.list.d/php.list
-
-RUN \
-    set -ev && \
+    add-apt-repository "deb http://httpredir.debian.org/debian experimental main" && \
     apt-get update && \
-    apt-get install -qy --no-install-recommends\
+    apt-get install -qy --no-install-recommends \
+    apt-transport-https \
+    ca-certificates \
     adduser \
     nginx-light \
-    php8.3-mysql \
-    php8.3-pgsql \
-    php8.3-sqlite3 \
-    php8.3-imagick \
-    php8.3-mbstring \
-    php8.3-gd \
-    php8.3-xml \
-    php8.3-zip \
-    php8.3-fpm \
-    php8.3-redis \
-    php8.3-bcmath \
-    php8.3-intl \
     curl \
     libimage-exiftool-perl \
     ffmpeg \
@@ -59,6 +40,19 @@ RUN \
     cron \
     composer \
     unzip && \
+    apt-get -t experimental install -y --no-install-recommends \
+    php8.3-mysql \
+    php8.3-pgsql \
+    php8.3-sqlite3 \
+    php8.3-imagick \
+    php8.3-mbstring \
+    php8.3-gd \
+    php8.3-xml \
+    php8.3-zip \
+    php8.3-fpm \
+    php8.3-redis \
+    php8.3-bcmath \
+    php8.3-intl && \
     addgroup --gid "$PGID" "$USER" && \
     adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" && \
     cd /var/www/html && \
